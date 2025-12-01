@@ -54,7 +54,7 @@ grid_size :: proc(input: string) -> (size: [2]int) {
 }
 
 scry :: proc(input: string, cmp: string) -> bool {
-	assert(len(cmp) <= 8)
+	assert(len(cmp) <= size_of(uint))
 	SWAR :: #config(SWAR, true)
 	when SWAR {
 		shamt := 8 * uint(size_of(uint) - len(cmp))
