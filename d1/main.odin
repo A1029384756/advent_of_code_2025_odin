@@ -1,5 +1,6 @@
 package d1
 
+import "../common"
 import "core:fmt"
 import "core:os/os2"
 import "core:strconv"
@@ -66,8 +67,8 @@ p1 :: proc(input: string) -> int {
 	dial := 50
 
 	input := input
-	for line in strings.split_lines_iterator(&input) {
-		val, _ := strconv.parse_int(line[1:])
+	for line in common.split_iterator_fast(&input, '\n') {
+		val := common.parse_int_fast(line[1:])
 		dial += line[0] == 'L' ? -val : val
 		if dial %% 100 == 0 do password += 1
 	}
@@ -80,8 +81,8 @@ p2 :: proc(input: string) -> int {
 	dial := 50
 
 	input := input
-	for line in strings.split_lines_iterator(&input) {
-		val, _ := strconv.parse_int(line[1:])
+	for line in common.split_iterator_fast(&input, '\n') {
+		val := common.parse_int_fast(line[1:])
 		password += val / 100
 		val %%= 100
 
