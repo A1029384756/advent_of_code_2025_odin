@@ -3,8 +3,6 @@ package d1
 import "../common"
 import "core:fmt"
 import "core:os/os2"
-import "core:strconv"
-import "core:strings"
 import "core:testing"
 import "core:time"
 
