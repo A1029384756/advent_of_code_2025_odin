@@ -69,7 +69,7 @@ p1 :: proc(input: string) -> int {
 	for line in strings.split_lines_iterator(&input) {
 		val, _ := strconv.parse_int(line[1:])
 		dial += line[0] == 'L' ? -val : val
-		if dial % 100 == 0 do password += 1
+		if dial %% 100 == 0 do password += 1
 	}
 
 	return password
@@ -83,7 +83,7 @@ p2 :: proc(input: string) -> int {
 	for line in strings.split_lines_iterator(&input) {
 		val, _ := strconv.parse_int(line[1:])
 		password += val / 100
-		val %= 100
+		val %%= 100
 
 		prev := dial
 		dial += line[0] == 'L' ? -val : val
@@ -93,7 +93,7 @@ p2 :: proc(input: string) -> int {
 		}
 
 		if dial < 0 do dial += 100
-		dial %= 100
+		dial %%= 100
 	}
 
 	return password
