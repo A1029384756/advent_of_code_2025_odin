@@ -1,0 +1,4 @@
+builds/
+input/*
+!input/.gitkeep
+tests/
