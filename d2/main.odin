@@ -76,18 +76,18 @@ p1 :: proc(input: string) -> (res: int) {
 		end_divisor := common.power(10, end_digits / 2)
 
 		for id in start ..= end {
-			if math.count_digits_of_base(id, 10) % 2 != 0 do continue
+			id_digits := math.count_digits_of_base(id, 10)
+			if id_digits % 2 != 0 do continue
 
-			id_split_start_a := id / start_divisor
-			id_split_start_b := id % start_divisor
-			if id_split_start_a == id_split_start_b {
-				res += id
-				continue
+			if id_digits == start_digits {
+				first_half := id / start_divisor
+				second_half := id % start_divisor
+				if first_half == second_half do res += id
+			} else {
+				first_half := id / end_divisor
+				second_half := id % end_divisor
+				if first_half == second_half do res += id
 			}
-
-			id_split_end_a := id / end_divisor
-			id_split_end_b := id % end_divisor
-			if id_split_end_a == id_split_end_b do res += id
 		}
 	}
 	return
