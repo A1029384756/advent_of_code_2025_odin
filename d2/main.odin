@@ -72,18 +72,21 @@ p1 :: proc(input: string) -> (res: int) {
 		start_digits := math.count_digits_of_base(start, 10)
 		end_digits := math.count_digits_of_base(end, 10)
 
+		start_divisor := common.power(10, start_digits / 2)
+		end_divisor := common.power(10, end_digits / 2)
+
 		for id in start ..= end {
 			if math.count_digits_of_base(id, 10) % 2 != 0 do continue
 
-			id_split_start_a := id / common.power(10, start_digits / 2)
-			id_split_start_b := id % common.power(10, start_digits / 2)
+			id_split_start_a := id / start_divisor
+			id_split_start_b := id % start_divisor
 			if id_split_start_a == id_split_start_b {
 				res += id
 				continue
 			}
 
-			id_split_end_a := id / common.power(10, end_digits / 2)
-			id_split_end_b := id % common.power(10, end_digits / 2)
+			id_split_end_a := id / end_divisor
+			id_split_end_b := id % end_divisor
 			if id_split_end_a == id_split_end_b do res += id
 		}
 	}
@@ -103,16 +106,16 @@ p2 :: proc(input: string) -> (res: int) {
 		check_id: for id in start ..= end {
 			for n_digits in 1 ..= end_digits / 2 {
 				if start_digits % n_digits != 0 && end_digits % n_digits != 0 do continue
-				trailing_digits := id % common.power(10, n_digits)
+				n_divisor := common.power(10, n_digits)
+				trailing_digits := id % n_divisor
 				if math.count_digits_of_base(trailing_digits, 10) != n_digits do continue
 
-				id_tmp := id / common.power(10, n_digits)
-
+				id_tmp := id / n_divisor
 				for {
-					id_trail := id_tmp % common.power(10, n_digits)
+					id_trail := id_tmp % n_divisor
 					if id_trail != trailing_digits do break
 
-					id_tmp /= common.power(10, n_digits)
+					id_tmp /= n_divisor
 					if id_tmp == 0 {
 						res += id
 						continue check_id
