@@ -1,63 +1,10 @@
 package d1
 
 import "../common"
-import "core:fmt"
-import "core:os/os2"
 import "core:testing"
-import "core:time"
 
-@(optimization_mode = "none")
 main :: proc() {
-	input_bytes, err := os2.read_entire_file(os2.args[1], context.allocator)
-	assert(err == nil)
-	defer delete(input_bytes)
-
-	input := string(input_bytes)
-
-	WARMUP_ITERATIONS :: 10
-	NUM_ITERATIONS :: 100
-
-	{
-		max_t, total_t: time.Duration
-		min_t := max(time.Duration)
-		res: int
-
-		for _ in 0 ..< WARMUP_ITERATIONS {
-			res = p1(input)
-		}
-
-		for _ in 0 ..< NUM_ITERATIONS {
-			start := time.now()
-			res = p1(input)
-			time := time.since(start)
-			min_t = min(time, min_t)
-			max_t = max(time, max_t)
-			total_t += time
-		}
-
-		fmt.println(res, min_t, max_t, total_t / NUM_ITERATIONS)
-	}
-
-	{
-		max_t, total_t: time.Duration
-		min_t := max(time.Duration)
-		res: int
-
-		for _ in 0 ..< WARMUP_ITERATIONS {
-			res = p2(input)
-		}
-
-		for _ in 0 ..< NUM_ITERATIONS {
-			start := time.now()
-			res = p2(input)
-			time := time.since(start)
-			min_t = min(time, min_t)
-			max_t = max(time, max_t)
-			total_t += time
-		}
-
-		fmt.println(res, min_t, max_t, total_t / NUM_ITERATIONS)
-	}
+	common.advent_of_code(p1, p2, {100, 1000})
 }
 
 p1 :: proc(input: string) -> int {

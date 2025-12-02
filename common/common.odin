@@ -1,5 +1,66 @@
 package common
 
+import "core:fmt"
+import "core:os/os2"
+import "core:time"
+
+
+BenchmarkConfig :: struct {
+	warmup:     int,
+	iterations: int,
+}
+
+@(optimization_mode = "none")
+advent_of_code :: proc(p1, p2: proc(input: string) -> int, bench: BenchmarkConfig) {
+	input_bytes, err := os2.read_entire_file(os2.args[1], context.allocator)
+	assert(err == nil)
+	defer delete(input_bytes)
+
+	input := string(input_bytes)
+
+	{
+		max_t, total_t: time.Duration
+		min_t := max(time.Duration)
+		res: int
+
+		for _ in 0 ..< bench.warmup {
+			res = p1(input)
+		}
+
+		for _ in 0 ..< bench.iterations {
+			start := time.now()
+			res = p1(input)
+			time := time.since(start)
+			min_t = min(time, min_t)
+			max_t = max(time, max_t)
+			total_t += time
+		}
+
+		fmt.println(res, min_t, max_t, total_t / time.Duration(bench.iterations))
+	}
+
+	{
+		max_t, total_t: time.Duration
+		min_t := max(time.Duration)
+		res: int
+
+		for _ in 0 ..< bench.warmup {
+			res = p2(input)
+		}
+
+		for _ in 0 ..< bench.iterations {
+			start := time.now()
+			res = p2(input)
+			time := time.since(start)
+			min_t = min(time, min_t)
+			max_t = max(time, max_t)
+			total_t += time
+		}
+
+		fmt.println(res, min_t, max_t, total_t / time.Duration(bench.iterations))
+	}
+}
+
 parse_int_fast :: proc(input: string) -> (res: int) {
 	for i in 0 ..< len(input) {
 		res = res * 10 + (int(input[i]) - '0')
