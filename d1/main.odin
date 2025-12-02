@@ -91,7 +91,6 @@ p2 :: proc(input: string) -> int {
 			password += 1
 		}
 
-		if dial < 0 do dial += 100
 		dial %%= 100
 	}
 
