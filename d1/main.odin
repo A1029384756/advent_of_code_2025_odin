@@ -108,5 +108,5 @@ p1_test :: proc(t: ^testing.T) {
 p2_test :: proc(t: ^testing.T) {
 	input := #load("./sample.txt", string)
 	pw := p2(input)
-	testing.expectf(t, pw == 6, "got %v", pw)
+	testing.expect(t, pw == 6)
 }

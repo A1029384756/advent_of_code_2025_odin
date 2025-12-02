@@ -68,3 +68,11 @@ scry :: proc(input: string, cmp: string) -> bool {
 		return len(input) >= len(cmp) && input[:len(cmp)] == cmp
 	}
 }
+
+power :: proc "contextless" (val, exp: int) -> int {
+	res := 1
+	for _ in 0 ..< exp {
+		res = res * val
+	}
+	return res
+}
