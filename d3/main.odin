@@ -1,7 +1,6 @@
 package d3
 
 import "../common"
-import "core:strings"
 import "core:testing"
 
 main :: proc() {
@@ -10,7 +9,7 @@ main :: proc() {
 
 p1 :: proc(input: string) -> (res: int) {
 	input := input
-	for bank in strings.split_lines_iterator(&input) {
+	for bank in common.split_iterator_fast(&input, '\n') {
 		res += joltage_from_n_batteries(bank, 2)
 	}
 	return res
@@ -18,7 +17,7 @@ p1 :: proc(input: string) -> (res: int) {
 
 p2 :: proc(input: string) -> (res: int) {
 	input := input
-	for bank in strings.split_lines_iterator(&input) {
+	for bank in common.split_iterator_fast(&input, '\n') {
 		res += joltage_from_n_batteries(bank, 12)
 	}
 	return res
@@ -27,15 +26,15 @@ p2 :: proc(input: string) -> (res: int) {
 joltage_from_n_batteries :: proc(bank: string, $N: int) -> int {
 	total_joltage, pos := 0, 0
 	for joltage_idx in 0 ..< N {
-		max_joltage, max_pos := 0, 0
-		for battery, battery_idx in bank[pos:len(bank) - (N - 1 - joltage_idx)] {
+		max_joltage := 0
+		for battery_idx in pos ..< (len(bank) - (N - 1 - joltage_idx)) {
+			battery := bank[battery_idx]
 			joltage := int(battery) - '0'
 			if joltage > max_joltage {
 				max_joltage = joltage
-				max_pos = battery_idx
+				pos = battery_idx + 1
 			}
 		}
-		pos += max_pos + 1
 		total_joltage = total_joltage * 10 + max_joltage
 	}
 	return total_joltage
