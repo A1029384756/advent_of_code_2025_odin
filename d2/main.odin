@@ -1,4 +1,4 @@
-package d1
+package d2
 
 import "../common"
 import "core:math"
