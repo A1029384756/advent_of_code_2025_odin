@@ -18,11 +18,12 @@ p1 :: proc(input: string) -> (res: int) {
 			if input[idx] != '@' do continue
 
 			n_adjacent := 0
-			for dir in DirVecs {
+			#unroll for dir in DirVecs {
 				target := coord + dir
-				if !common.coord_valid(target, size) do continue
-				idx := common.coord_to_idx(target, size)
-				if input[idx] == '@' do n_adjacent += 1
+				if common.coord_valid(target, size) {
+					idx := common.coord_to_idx(target, size)
+					if input[idx] == '@' do n_adjacent += 1
+				}
 			}
 			if n_adjacent < 4 do res += 1
 		}
@@ -48,11 +49,12 @@ p2 :: proc(input: string) -> (res: int) {
 			cell := &cells[y * size.x + x]
 			cell.occupied = true
 			n_adjacent := i8(0)
-			for dir in DirVecs {
+			#unroll for dir in DirVecs {
 				target := coord + dir
-				if !common.coord_valid(target, size) do continue
-				idx := common.coord_to_idx(target, size)
-				if input[idx] == '@' do n_adjacent += 1
+				if common.coord_valid(target, size) {
+					idx := common.coord_to_idx(target, size)
+					if input[idx] == '@' do n_adjacent += 1
+				}
 			}
 			cell.neighbors = n_adjacent
 		}
@@ -67,10 +69,11 @@ p2 :: proc(input: string) -> (res: int) {
 				removed = true
 				cell.occupied = false
 				res += 1
-				for dir in DirVecs {
+				#unroll for dir in DirVecs {
 					target := [2]int{idx % size.x, idx / size.x} + dir
-					if !common.coord_valid(target, size) do continue
-					cells[target.y * size.x + target.x].neighbors -= 1
+					if common.coord_valid(target, size) {
+						cells[target.y * size.x + target.x].neighbors -= 1
+					}
 				}
 			}
 		}
