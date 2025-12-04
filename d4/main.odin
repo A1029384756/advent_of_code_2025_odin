@@ -4,7 +4,7 @@ import "../common"
 import "core:testing"
 
 main :: proc() {
-	common.advent_of_code(p1, p2, {10, 100})
+	common.advent_of_code(p1, p2, {100, 1000})
 }
 
 DirVecs :: [?][2]int{{0, -1}, {0, 1}, {1, 0}, {-1, 0}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}}
@@ -18,7 +18,7 @@ p1 :: proc(input: string) -> (res: int) {
 			if input[idx] != '@' do continue
 
 			n_adjacent := 0
-			for dir in DirVecs {
+			#unroll for dir in DirVecs {
 				target := coord + dir
 				if !common.coord_valid(target, size) do continue
 				idx := common.coord_to_idx(target, size)
@@ -48,7 +48,7 @@ p2 :: proc(input: string) -> (res: int) {
 			cell := &cells[y * size.x + x]
 			cell.occupied = true
 			n_adjacent := i8(0)
-			for dir in DirVecs {
+			#unroll for dir in DirVecs {
 				target := coord + dir
 				if !common.coord_valid(target, size) do continue
 				idx := common.coord_to_idx(target, size)
@@ -67,7 +67,7 @@ p2 :: proc(input: string) -> (res: int) {
 				removed = true
 				cell.occupied = false
 				res += 1
-				for dir in DirVecs {
+				#unroll for dir in DirVecs {
 					target := [2]int{idx % size.x, idx / size.x} + dir
 					if !common.coord_valid(target, size) do continue
 					cells[target.y * size.x + target.x].neighbors -= 1
