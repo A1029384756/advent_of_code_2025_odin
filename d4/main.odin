@@ -1,7 +1,6 @@
 package d3
 
 import "../common"
-import "core:strings"
 import "core:testing"
 
 main :: proc() {
@@ -32,35 +31,48 @@ p1 :: proc(input: string) -> (res: int) {
 }
 
 p2 :: proc(input: string) -> (res: int) {
-	input := strings.clone(input)
-	defer delete(input)
-
 	size := common.grid_size(input)
-	for {
-		input := transmute([]u8)input
-		removed := false
-		for x in 0 ..< size.x {
-			for y in 0 ..< size.y {
-				coord := [2]int{x, y}
-				idx := common.coord_to_idx(coord, size)
-				if input[idx] != '@' do continue
+	occupied := make([]bool, size.x * size.y)
+	neighbors := make([]i8, size.x * size.y)
+	defer delete(occupied)
+	defer delete(neighbors)
 
-				n_adjacent := 0
+	for x in 0 ..< size.x {
+		for y in 0 ..< size.y {
+			coord := [2]int{x, y}
+			idx := common.coord_to_idx(coord, size)
+			if input[idx] != '@' do continue
+
+			occupied[y * size.x + x] = true
+			n_adjacent := i8(0)
+			for dir in DirVecs {
+				target := coord + dir
+				if !common.coord_valid(target, size) do continue
+				idx := common.coord_to_idx(target, size)
+				if input[idx] == '@' do n_adjacent += 1
+			}
+			neighbors[y * size.x + x] = n_adjacent
+		}
+	}
+
+	for {
+		removed := false
+		for idx in 0 ..< len(occupied) {
+			if !occupied[idx] do continue
+			if neighbors[idx] < 4 {
+				removed = true
+				occupied[idx] = false
+				res += 1
 				for dir in DirVecs {
-					target := coord + dir
+					target := [2]int{idx % size.x, idx / size.x} + dir
 					if !common.coord_valid(target, size) do continue
-					idx := common.coord_to_idx(target, size)
-					if input[idx] == '@' do n_adjacent += 1
-				}
-				if n_adjacent < 4 {
-					removed = true
-					res += 1
-					input[idx] = '.'
+					neighbors[target.y * size.x + target.x] -= 1
 				}
 			}
 		}
 		if !removed do break
 	}
+
 	return
 }
 
