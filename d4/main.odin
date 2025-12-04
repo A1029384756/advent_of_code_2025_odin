@@ -32,10 +32,12 @@ p1 :: proc(input: string) -> (res: int) {
 
 p2 :: proc(input: string) -> (res: int) {
 	size := common.grid_size(input)
-	occupied := make([]bool, size.x * size.y)
-	neighbors := make([]i8, size.x * size.y)
-	defer delete(occupied)
-	defer delete(neighbors)
+	Cell :: bit_field u8 {
+		occupied:  bool | 1,
+		neighbors: i8   | 7,
+	}
+	cells := make([]Cell, size.x * size.y)
+	defer delete(cells)
 
 	for x in 0 ..< size.x {
 		for y in 0 ..< size.y {
@@ -43,7 +45,8 @@ p2 :: proc(input: string) -> (res: int) {
 			idx := common.coord_to_idx(coord, size)
 			if input[idx] != '@' do continue
 
-			occupied[y * size.x + x] = true
+			cell := &cells[y * size.x + x]
+			cell.occupied = true
 			n_adjacent := i8(0)
 			for dir in DirVecs {
 				target := coord + dir
@@ -51,22 +54,23 @@ p2 :: proc(input: string) -> (res: int) {
 				idx := common.coord_to_idx(target, size)
 				if input[idx] == '@' do n_adjacent += 1
 			}
-			neighbors[y * size.x + x] = n_adjacent
+			cell.neighbors = n_adjacent
 		}
 	}
 
 	for {
 		removed := false
-		for idx in 0 ..< len(occupied) {
-			if !occupied[idx] do continue
-			if neighbors[idx] < 4 {
+		for idx in 0 ..< len(cells) {
+			cell := &cells[idx]
+			if !cell.occupied do continue
+			if cell.neighbors < 4 {
 				removed = true
-				occupied[idx] = false
+				cell.occupied = false
 				res += 1
 				for dir in DirVecs {
 					target := [2]int{idx % size.x, idx / size.x} + dir
 					if !common.coord_valid(target, size) do continue
-					neighbors[target.y * size.x + target.x] -= 1
+					cells[target.y * size.x + target.x].neighbors -= 1
 				}
 			}
 		}
