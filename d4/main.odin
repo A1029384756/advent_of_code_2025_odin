@@ -1,4 +1,4 @@
-package d3
+package d4
 
 import "../common"
 import "core:testing"
