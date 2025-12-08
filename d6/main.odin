@@ -1,7 +1,6 @@
 package d6
 
 import "../common"
-import "core:fmt"
 import "core:slice"
 import "core:strconv"
 import "core:strings"
