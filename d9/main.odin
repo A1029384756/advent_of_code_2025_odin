@@ -8,10 +8,6 @@ main :: proc() {
 	common.advent_of_code(p1, p2, {2, 5})
 }
 
-len2 :: proc(a: [2]int) -> int {
-	return a.x * a.x + a.y * a.y
-}
-
 parse_tiles :: proc(input: string, tiles: ^[dynamic][2]int) {
 	input := input
 	for line in common.split_iterator_fast(&input, '\n') {
